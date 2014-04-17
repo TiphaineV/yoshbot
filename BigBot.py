@@ -42,7 +42,7 @@ class BigBot(ircbot.SingleServerIRCBot):
 			tags=m.group(1)
 		else:
 			source=random.choice.(sources)
-			tags=[]
+			tags=''
 
 		if(source == "giphy"):
 			print(giphy)
