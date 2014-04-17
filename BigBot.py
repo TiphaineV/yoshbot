@@ -6,8 +6,6 @@ import json
 import random
 from string import Template
 
-sentences = []
-
 class BigBot(ircbot.SingleServerIRCBot):
 	def __init__(self):
 		ircbot.SingleServerIRCBot.__init__(self, [('jordanviard.com', 6667)], 'BigBot', 'Bot posteur de GIFs')
@@ -31,7 +29,7 @@ class BigBot(ircbot.SingleServerIRCBot):
 		if message.find('gif') is not -1:
 			json_resp = urllib2.urlopen('http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC').read()
 			rep = json.loads(json_resp)
-			serv.privmsg(channel,getMsg(name=author, url=rep[unicode('data')][unicode('image_url')]))
+			serv.privmsg(channel,self.getMsg(name=author, url=rep[unicode('data')][unicode('image_url')]))
 
 if __name__ == '__main__':
 	print 'Bot running...'
