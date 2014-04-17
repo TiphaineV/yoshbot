@@ -5,10 +5,12 @@ import urllib2
 import json
 import random
 from string import Template
+import re
 
 class BigBot(ircbot.SingleServerIRCBot):
 	def __init__(self):
 		ircbot.SingleServerIRCBot.__init__(self, [('jordanviard.com', 6667)], 'BigBot', 'Bot posteur de GIFs')
+		self.sources= ["giphy","twitter"]
 		self.sentences= [ "Petit coquin, va : $url",
 				"Un gif plein d'amour pour toi, $name : $url",
 				"Cadeau : $url",
@@ -21,21 +23,34 @@ class BigBot(ircbot.SingleServerIRCBot):
 	def getMsg(self, **arg):
 		return Template(random.choice(self.sentences)).safe_substitute(arg)
 
-	def getGif(self, message):
-		tags = ""
-
-		if message[0:4].lower()  == '!gif':
-			contents = message.split(" ")
-			cats = contents[1:]
-			tags = '+'.join(cats)
-
-		json_resp = urllib2.urlopen('http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=' + str(tags)).read()
-                rep = json.loads(json_resp)
+	def getGiphy(self,tags):
+		tab = tags.split(" ")
+		strTag='+'.join(tab)
+		json_resp = urllib2.urlopen('http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=' + str(strTag)).read()
+        rep = json.loads(json_resp)
 		if len(rep[unicode('data')]) is 0:
 			rep[unicode('data')] = {}
 			rep[unicode('data')][unicode('image_url')] = "i__i"
 
 		return rep
+
+	def getGif(self, message):
+		tags = []
+		m = re.search('(?<=\!)(\w+)(.*)', message)
+		if (m):
+			source=m.group(0)
+			tags=m.group(1)
+		else:
+			source=random.choice.(sources)
+			tags=[]
+
+		if(source == "giphy"):
+			print(giphy)
+			return self.getGiphy(tags)
+		elif(source == "twitter"):
+			print("twitter")
+			return self.getGiphy(tags)
+		print("non reconnue")
 
 	def on_pubmsg(self, serv, ev):
 		author = irclib.nm_to_n(ev.source())
