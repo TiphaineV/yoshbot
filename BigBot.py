@@ -38,7 +38,7 @@ class BigBot(ircbot.SingleServerIRCBot):
 			rep[unicode('data')] = {}
 			rep[unicode('data')][unicode('image_url')] = "i__i"
 
-		return rep
+		return rep[unicode('data')][unicode('image_url')] 
 
 	def reddit(self,subreddit):
 		if(subreddit==""):
@@ -51,6 +51,7 @@ class BigBot(ircbot.SingleServerIRCBot):
 		req = requests.get(url)
 		document = pq(req.text).make_links_absolute(url)
 		title=document('title').html()
+		print(title)
 		if(title=="Too Many Requests") :
 			return "Too many reddit requests."
 		return random.choice(document('div.thing div.entry a.title')).get('href')
@@ -70,10 +71,9 @@ class BigBot(ircbot.SingleServerIRCBot):
 		else:
 			source=random.choice(self.sources)
 			tags=''
-		pdb.set_trace()
 		if(source == "giphy"):
 			print('giphy')
-			return self.Giphy(tags)
+			return self.giphy(tags)
 		elif(source == "twitter"):
 			print("twitter")
 			return self.giphy(tags)
@@ -88,9 +88,9 @@ class BigBot(ircbot.SingleServerIRCBot):
 		channel = ev.target()
 		message = ev.arguments()[0].lower()
 		
-		if message.find('gif') is not -1 or message.find('giphy') is not -1 or message.find('twitter') is not -1:
+		if message.find('gif') is not -1 or message.find('giphy') is not -1 or message.find('twitter') is not -1 or message.find('reddit') is not -1:
 			rep = self.getGif(message)
-			serv.privmsg(channel,self.getMsg(name=author, url=rep[unicode('data')][unicode('image_url')]))
+			serv.privmsg(channel,self.getMsg(name=author, url=rep))
 		
 if __name__ == '__main__':
 	print 'Bot running...'
