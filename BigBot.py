@@ -50,12 +50,10 @@ class BigBot(ircbot.SingleServerIRCBot):
 		print(url)
 		req = requests.get(url)
 		if(not req.ok):
-			return "Bad channel name."
+			return "Bad subbreddit name or too many requests."
 		document = pq(req.text).make_links_absolute(url)
 		title=document('title').html()
 		print(title)
-		if(title=="Too Many Requests") :
-			return "Too many reddit requests."
 		if len(document('div.thing div.entry a.title')) is 0:
 			return "No div.entry there !"
 
