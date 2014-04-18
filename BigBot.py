@@ -39,12 +39,15 @@ class BigBot(ircbot.SingleServerIRCBot):
 		m = re.search('(?<=\!)(\w+)(.*)', message)
 		
 		if (m is not None):
-			source=m.group(1)
+			if m.group(1) not in self.sources:
+				source = random.choice(self.sources)
+			else:
+				source=m.group(1)
 			tags=m.group(2)
 		else:
 			source=random.choice(self.sources)
 			tags=''
-
+		pdb.set_trace()
 		if(source == "giphy"):
 			print('giphy')
 			return self.getGiphy(tags)
