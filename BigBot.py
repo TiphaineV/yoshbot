@@ -49,6 +49,8 @@ class BigBot(ircbot.SingleServerIRCBot):
 		url = u"http://fr.reddit.com/r/"+sub+"/"+random.choice(tabs)
 		print(url)
 		req = requests.get(url)
+		if(not req.ok):
+			return "Bad channel name."
 		document = pq(req.text).make_links_absolute(url)
 		title=document('title').html()
 		print(title)
