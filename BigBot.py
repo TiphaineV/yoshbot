@@ -6,11 +6,17 @@ import json
 import random
 from string import Template
 import re
+import requests
+from pyquery import PyQuery as pq
+
+
+
+
 
 class BigBot(ircbot.SingleServerIRCBot):
 	def __init__(self):
 		ircbot.SingleServerIRCBot.__init__(self, [('jordanviard.com', 6667)], 'BigBot', 'Bot posteur de GIFs')
-		self.sources = ["giphy","twitter"]
+		self.sources = ["giphy","twitter",'reddit']
 		self.sentences = [ "Petit coquin, va : $url",
 				"Un gif plein d'amour pour toi, $name : $url",
 				"Cadeau : $url",
@@ -23,7 +29,7 @@ class BigBot(ircbot.SingleServerIRCBot):
 	def getMsg(self, **arg):
 		return Template(random.choice(self.sentences)).safe_substitute(arg)
 
-	def getGiphy(self,tags):
+	def giphy(self,tags):
 		tab = tags.split(" ")
 		strTag='+'.join(tab)
 		json_resp = urllib2.urlopen('http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=' + str(strTag)).read()
@@ -33,6 +39,23 @@ class BigBot(ircbot.SingleServerIRCBot):
 			rep[unicode('data')][unicode('image_url')] = "i__i"
 
 		return rep
+
+	def reddit(self,subreddit):
+		if(subreddit==""):
+			sub='gifs'
+		else:
+			sub=subreddit.split(" ")[0];
+		tabs= ['','new/','rising/','controversial/','top/','gilded/']
+		url = u"http://fr.reddit.com/r/"+sub+"/"+random.choice(tabs)
+		print(url)
+		req = requests.get(url)
+		document = pq(req.text).make_links_absolute(url)
+		title=document('title').html()
+		if(title=="Too Many Requests") :
+			return "Too many reddit requests."
+		return random.choice(document('div.thing div.entry a.title')).get('href')
+
+
 
 	def getGif(self, message):
 		tags = []
@@ -50,10 +73,13 @@ class BigBot(ircbot.SingleServerIRCBot):
 		pdb.set_trace()
 		if(source == "giphy"):
 			print('giphy')
-			return self.getGiphy(tags)
+			return self.Giphy(tags)
 		elif(source == "twitter"):
 			print("twitter")
-			return self.getGiphy(tags)
+			return self.giphy(tags)
+		elif source == "reddit":
+			print('reddit')
+			return self.reddit(tags)
 		
 		print("non reconnue")
 
