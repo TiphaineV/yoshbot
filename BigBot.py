@@ -91,7 +91,7 @@ class BigBot(ircbot.SingleServerIRCBot):
 		channel = ev.target()
 		message = ev.arguments()[0].lower()
 		
-		if message.find('gif') is not -1 or message.find('giphy') is not -1 or message.find('twitter') is not -1 or message.find('reddit') is not -1:
+		if any(message.find(i) is not -1 for i in self.sources):
 			rep = self.getGif(message)
 			serv.privmsg(channel,self.getMsg(name=author, url=rep))
 	
