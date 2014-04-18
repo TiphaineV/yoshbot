@@ -44,7 +44,7 @@ class BigBot(ircbot.SingleServerIRCBot):
 		if(subreddit==""):
 			sub='gifs'
 		else:
-			sub=subreddit.split(" ")[0];
+			sub=subreddit.split(" ")[1];
 		tabs= ['','new/','rising/','controversial/','top/','gilded/']
 		url = u"http://fr.reddit.com/r/"+sub+"/"+random.choice(tabs)
 		print(url)
@@ -56,6 +56,9 @@ class BigBot(ircbot.SingleServerIRCBot):
 		print(title)
 		if(title=="Too Many Requests") :
 			return "Too many reddit requests."
+		if len(document('div.thing div.entry a.title')) is 0:
+			return "No div.entry there !"
+
 		return random.choice(document('div.thing div.entry a.title')).get('href')
 
 
@@ -93,7 +96,10 @@ class BigBot(ircbot.SingleServerIRCBot):
 		if message.find('gif') is not -1 or message.find('giphy') is not -1 or message.find('twitter') is not -1 or message.find('reddit') is not -1:
 			rep = self.getGif(message)
 			serv.privmsg(channel,self.getMsg(name=author, url=rep))
-		
+	
+		if message.find("bonjour bigbot") is not -1:
+			serv.privmsg(channel, "Bonjour " + str(author) + "! C'est gentil de me parler :)" )
+
 if __name__ == '__main__':
 	print 'Bot running...'
 	B = BigBot().start()
