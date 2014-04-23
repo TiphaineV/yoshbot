@@ -1,5 +1,5 @@
-import ircbot
-import irclib
+import irc.client
+import irc.bot
 import pdb
 import urllib2
 import json
@@ -8,14 +8,14 @@ from string import Template
 import re
 import requests
 from pyquery import PyQuery as pq
+from giphy import *
 
 
 
 
-
-class BigBot(ircbot.SingleServerIRCBot):
+class BigBot(irc.bot.SingleServerIRCBot):
 	def __init__(self):
-		ircbot.SingleServerIRCBot.__init__(self, [('jordanviard.com', 6667)], 'BigBot', 'Bot posteur de GIFs')
+		irc.bot.SingleServerIRCBot.__init__(self, [('jordanviard.com', 6667)], 'Bigbot', 'Bot posteur de GIFs')
 		self.sources = ["giphy","twitter",'reddit']
 		self.sentences = [ "Petit coquin, va : $url",
 				"Un gif plein d'amour pour toi, $name : $url",
@@ -87,7 +87,7 @@ class BigBot(ircbot.SingleServerIRCBot):
 		print("non reconnue")
 
 	def on_pubmsg(self, serv, ev):
-		author = irclib.nm_to_n(ev.source())
+		author = irc.client.nm_to_n(ev.source())
 		channel = ev.target()
 		message = ev.arguments()[0].lower()
 		
