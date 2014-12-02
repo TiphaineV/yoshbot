@@ -5,7 +5,6 @@ import json
 from string import Template
 import re
 import requests
-from pyquery import PyQuery as pq
 
 class Giphy:
 	name="Giphy"

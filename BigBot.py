@@ -1,13 +1,9 @@
 import irc.client
 import irc.bot
-import pdb
-import urllib2
 import json
 import random
 from string import Template
 import re
-import requests
-from pyquery import PyQuery as pq
 from giphy import *
 from reddit import *
 
@@ -15,7 +11,7 @@ from reddit import *
 
 class BigBot(irc.bot.SingleServerIRCBot):
 	def __init__(self):
-		irc.bot.SingleServerIRCBot.__init__(self, [('jordanviard.com', 6667)], 'BigBot', 'Bot posteur de GIFs')
+		irc.bot.SingleServerIRCBot.__init__(self, [('irc.freenode.net', 6667)], 'BigBot', 'Bot posteur de GIFs')
 		self.sources = {"giphy":Giphy(), "reddit":Reddit()}
 		self.sentences = [ "Petit coquin, va : $url",
 				"Un gif plein d'amour pour toi, $name : $url",
@@ -23,8 +19,8 @@ class BigBot(irc.bot.SingleServerIRCBot):
 				"Non tu n'en aura pas $name!" ]
 	
 	def on_welcome(self, serv, ev):
-		print 'Joining #Yoshteam'
-		serv.join('#Yoshteam')
+		print 'Joining #bitesvolantes'
+		serv.join('#bitesvolantes')
 	
 	def answer(self,query,context):
 		tags = []
